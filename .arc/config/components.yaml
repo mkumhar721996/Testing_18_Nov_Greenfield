@@ -1,0 +1,78 @@
+version: 2
+components:
+  comp_web_app:
+    name: Web App
+    repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
+    kind: web_ui
+    integrations:
+    - to: comp_leave_api
+      interaction: sync
+      via: http
+      auth:
+        scheme: jwt
+        idp: comp_identity_provider
+      status: planned
+      evidence: 'proposed: browser client calls the API'
+    - to: comp_identity_provider
+      interaction: sync
+      via: http
+      auth:
+        scheme: oidc
+        idp: comp_identity_provider
+      status: planned
+      evidence: 'human: Company SSO via Entra ID'
+  comp_leave_api:
+    name: Leave API
+    repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
+    kind: api_service
+    integrations:
+    - to: comp_relational_database
+      interaction: sync
+      status: planned
+      evidence: 'proposed: API persists leave data'
+    - to: comp_identity_provider
+      interaction: sync
+      via: http
+      auth:
+        scheme: jwt
+        idp: comp_identity_provider
+      status: planned
+      evidence: 'human: Company SSO via Entra ID'
+  comp_leave_worker:
+    name: Leave Worker
+    repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
+    kind: worker
+    integrations:
+    - to: comp_relational_database
+      interaction: sync
+      status: planned
+      evidence: 'proposed: jobs read and update balances and requests'
+    - to: external:email-service
+      interaction: sync
+      via: http
+      auth:
+        scheme: api_key
+        credential_ref: vault:email-service/api-key
+      status: planned
+      evidence: 'human: "Email service only"'
+  comp_relational_database:
+    name: Relational Database
+    repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
+    kind: managed_service
+  comp_identity_provider:
+    name: Identity Provider
+    repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
+    kind: managed_service
+    identity:
+      provider: entra
+      hosting: managed
+      protocols:
+      - oidc
+      - oauth2
+      - jwt
+      flows:
+      - authorization_code_pkce
+      token: jwt
+      sso: true
+      user_store: directory
+      notes: Flow, token and MFA settings proposed; confirm with the identity team.
