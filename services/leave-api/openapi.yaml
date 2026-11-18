@@ -8,6 +8,8 @@ paths:
       summary: Payments due for the signed-in customer from today through the look-ahead window (inclusive)
       description: The window is a server-side setting (default 30 days); no parameter changes it. Overdue items are excluded.
       responses:
+        '401':
+          description: No authenticated customer on the request
         '200':
           description: Upcoming payments sorted by due date
           content:
