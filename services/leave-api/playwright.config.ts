@@ -9,7 +9,12 @@ export default defineConfig({
   webServer: {
     command: 'pnpm build && node dist/main',
     url: `http://127.0.0.1:${port}/health`,
-    env: { PORT: String(port), HOST: '127.0.0.1' },
+    env: {
+      PORT: String(port),
+      HOST: '127.0.0.1',
+      LEAVE_BALANCES_DEV_SEED: 'true',
+      LEAVE_API_TEST_PRINCIPAL: 'true',
+    },
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

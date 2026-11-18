@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 0.1.0
+paths:
+  /leave-balances/me:
+    get:
+      summary: Leave balances of the calling employee, one per leave type
+      description: >
+        The employee is taken from the authenticated principal only. The balance is
+        opening days minus approved days; pending days are reported separately and
+        never subtracted. A non-negative balance is rounded down to whole days; a
+        negative balance is returned as-is.
+      responses:
+        '200':
+          description: Balances for the calling employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveBalancesResponse'
+        '401':
+          description: No authenticated principal
+components:
+  schemas:
+    LeaveBalancesResponse:
+      type: object
+      required: [asOf, balances]
+      properties:
+        asOf:
+          type: string
+          format: date
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeaveBalance'
+    LeaveBalance:
+      type: object
+      required: [leaveTypeId, leaveTypeName, balanceDays, pendingDays, pendingFrom, pendingTo]
+      properties:
+        leaveTypeId:
+          type: string
+        leaveTypeName:
+          type: string
+        balanceDays:
+          type: number
+        pendingDays:
+          type: number
+        pendingFrom:
+          type: string
+          format: date
+          nullable: true
+        pendingTo:
+          type: string
+          format: date
+          nullable: true
