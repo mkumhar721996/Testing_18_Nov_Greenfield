@@ -1,0 +1,94 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1f2937; /** Body text */
+  --color-fg-muted: #4b5563; /** Secondary text, hints */
+  --color-bg: #ffffff; /** Page background */
+  --color-surface: #f3f4f6; /** Subtle surface and hover fill */
+  --color-border: #d1d5db; /** Default borders and dividers */
+  --color-border-strong: #6b7280; /** Form control borders */
+  --color-primary: #1d4ed8; /** Primary actions, links, focus ring */
+  --color-primary-hover: #1e40af; /** Primary hover */
+  --color-on-primary: #ffffff; /** Text on primary and danger fills */
+  --color-primary-subtle: #dbeafe; /** Selected state and info tint */
+  --color-primary-subtle-fg: #1e3a8a; /** Text on info tint */
+  --color-danger: #b91c1c; /** Destructive actions and errors */
+  --color-danger-hover: #991b1b; /** Danger hover */
+  --color-danger-subtle: #fee2e2; /** Danger tint (declined) */
+  --color-danger-subtle-fg: #7f1d1d; /** Text on danger tint */
+  --color-success-subtle: #dcfce7; /** Success tint (approved) */
+  --color-success-subtle-fg: #14532d; /** Text on success tint */
+  --color-warning-subtle: #fef3c7; /** Warning tint (pending) */
+  --color-warning-subtle-fg: #78350f; /** Text on warning tint */
+  --color-overlay: rgba(17, 24, 39, 0.5); /** Backdrop behind modals and drawers */
+  --color-skeleton: #e5e7eb; /** Skeleton placeholder fill */
+  --space-1: 4px; /** Spacing step 1 */
+  --space-2: 8px; /** Spacing step 2 */
+  --space-3: 16px; /** Spacing step 3 */
+  --space-4: 24px; /** Spacing step 4 */
+  --space-5: 32px; /** Spacing step 5 */
+  --space-6: 48px; /** Spacing step 6 */
+  --radius-sm: 4px; /** Inputs, tooltips */
+  --radius-md: 8px; /** Buttons, menus */
+  --radius-lg: 12px; /** Cards, modals */
+  --radius-full: 9999px; /** Pills, avatars, switches */
+  --font-size-xs: 12px; /** Badges, captions */
+  --font-size-sm: 14px; /** Dense text, labels */
+  --font-size-md: 16px; /** Body text */
+  --font-size-lg: 20px; /** Section headings */
+  --font-size-xl: 28px; /** Page titles */
+  --size-control-sm: 32px; /** Small control height */
+  --size-control-md: 40px; /** Default control height */
+  --size-control-lg: 48px; /** Large control height */
+  --size-check: 18px; /** Checkbox and radio box */
+  --size-switch-width: 40px; /** Switch track width */
+  --size-switch-height: 22px; /** Switch track height */
+  --size-avatar: 36px; /** Avatar diameter */
+  --size-spinner: 20px; /** Spinner diameter */
+  --size-drawer: 360px; /** Drawer width */
+  --size-modal: 480px; /** Modal max width */
+  --size-menu: 200px; /** Menu min width */
+  --size-content: 1120px; /** Max content width */
+  --border-width: 1px; /** Hairline border */
+  --border-width-strong: 2px; /** Focus ring, selected tab */
+  --outline-offset: 2px; /** Focus ring offset */
+  --font-family-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; /** UI font */
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, monospace; /** Ids and codes */
+  --font-weight-regular: 400; /** Regular weight */
+  --font-weight-medium: 500; /** Medium weight */
+  --font-weight-bold: 700; /** Bold weight */
+  --line-height-body: 1.5; /** Body line height */
+  --line-height-tight: 1.25; /** Heading line height */
+  --opacity-disabled: 0.5; /** Disabled controls */
+  --z-dropdown: 10; /** Dropdowns and tooltips */
+  --z-overlay: 100; /** Backdrop and drawer */
+  --z-modal: 110; /** Modal */
+  --z-toast: 120; /** Toast */
+  --shadow-md: 0px 4px 12px 0px rgb(6.67% 9.41% 15.29% / 0.15); /** Popups, modals, toasts */
+  --button-primary-background: var(--color-primary);
+  --button-primary-background-hover: var(--color-primary-hover);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border: var(--color-primary);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-background-hover: var(--color-surface);
+  --button-secondary-foreground: var(--color-fg);
+  --button-secondary-border: var(--color-border-strong);
+  --button-danger-background: var(--color-danger);
+  --button-danger-background-hover: var(--color-danger-hover);
+  --button-danger-foreground: var(--color-on-primary);
+  --button-danger-border: var(--color-danger);
+  --button-default-radius: var(--radius-md);
+  --button-default-padding-x: var(--space-3);
+  --button-default-height: var(--size-control-md);
+  --card-default-background: var(--color-bg);
+  --card-default-foreground: var(--color-fg);
+  --card-default-border: var(--color-border);
+  --card-default-radius: var(--radius-lg);
+  --card-default-padding: var(--space-3);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border-strong);
+  --input-default-radius: var(--radius-sm);
+  --input-invalid-border: var(--color-danger);
+}
