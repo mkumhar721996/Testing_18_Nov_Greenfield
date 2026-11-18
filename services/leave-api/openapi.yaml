@@ -1,0 +1,31 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 1.0.0
+paths:
+  /offers:
+    get:
+      summary: Pre-approved offers the signed-in customer is eligible for
+      description: The customer is taken from the signed-in request, never from a parameter.
+      responses:
+        '200':
+          description: Eligible offers, personal loan first then card upgrade; empty when none.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [offers]
+                properties:
+                  offers:
+                    type: array
+                    items:
+                      type: object
+                      required: [type]
+                      properties:
+                        type:
+                          type: string
+                          enum: [personal-loan, card-upgrade]
+                        headline:
+                          type: string
+        '401':
+          description: No signed-in customer.

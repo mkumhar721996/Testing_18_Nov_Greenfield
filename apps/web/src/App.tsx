@@ -1,7 +1,10 @@
+import { PreApprovedOffers } from './offers/PreApprovedOffers'
+
 export default function App() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
       <h1 className="text-3xl font-bold text-slate-900">Web App</h1>
+      <PreApprovedOffers />
     </main>
   )
 }
