@@ -11,6 +11,6 @@ import { SpinsModule } from './spins/spins.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(placeholderCaller(process.env.NODE_ENV)).forRoutes('*');
+    consumer.apply(placeholderCaller(process.env)).forRoutes('spins');
   }
 }

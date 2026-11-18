@@ -1,20 +1,28 @@
 import { describe, expect, it, vi } from 'vitest';
 import { placeholderCaller } from './placeholder-caller.middleware';
 
+function run(env: { NODE_ENV?: string; ALLOW_PLACEHOLDER_CALLER?: string }) {
+  const request: { caller?: { role: string } } = {};
+  const next = vi.fn();
+  placeholderCaller(env)(request, {}, next);
+  expect(next).toHaveBeenCalled();
+  return request.caller;
+}
+
 describe('placeholderCaller', () => {
-  it('treats the request as an employee outside production', () => {
-    const request: { caller?: { role: string } } = {};
-    const next = vi.fn();
-    placeholderCaller('development')(request, {}, next);
-    expect(request.caller).toEqual({ role: 'employee' });
-    expect(next).toHaveBeenCalled();
+  it.each(['development', 'test'])('treats the request as an employee in %s when opted in', (NODE_ENV) => {
+    expect(run({ NODE_ENV, ALLOW_PLACEHOLDER_CALLER: 'true' })).toEqual({ role: 'employee' });
   });
 
-  it('leaves the caller unset in production so the guard refuses', () => {
-    const request: { caller?: { role: string } } = {};
-    const next = vi.fn();
-    placeholderCaller('production')(request, {}, next);
-    expect(request.caller).toBeUndefined();
-    expect(next).toHaveBeenCalled();
+  it('does nothing without the explicit opt-in flag', () => {
+    expect(run({ NODE_ENV: 'development' })).toBeUndefined();
+    expect(run({ NODE_ENV: 'test', ALLOW_PLACEHOLDER_CALLER: 'yes' })).toBeUndefined();
   });
+
+  it.each([undefined, '', 'production', 'prod', 'staging'])(
+    'fails closed when NODE_ENV is %s even if opted in',
+    (NODE_ENV) => {
+      expect(run({ NODE_ENV, ALLOW_PLACEHOLDER_CALLER: 'true' })).toBeUndefined();
+    },
+  );
 });
