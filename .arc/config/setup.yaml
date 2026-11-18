@@ -10,17 +10,18 @@ components:
     base_port: 8080
     ready_check:
       url: http://localhost:{port}/
+    install_command: cd services/leave-api && pnpm add {name}@{version}
   comp_leave_worker:
     mode: local
     test_command: cd services/leave-worker && pnpm run test
     build_command: cd services/leave-worker && pnpm run build
-    start_command: cd services/leave-worker && pnpm exec tsx src/index.ts --host {host}
-      --port {port}
+    start_command: cd services/leave-worker && pnpm exec tsx src/index.ts --host {host} --port {port}
     devloop_command: cd services/leave-worker && pnpm run devloop
     port_env: COMP_LEAVE_WORKER_PORT
     base_port: 8081
     ready_check:
       url: http://localhost:{port}/
+    install_command: cd services/leave-worker && pnpm add {name}@{version}
   comp_web_app:
     mode: local
     e2e_command: cd apps/web && pnpm e2e
@@ -33,16 +34,14 @@ components:
     ready_check:
       url: http://localhost:{port}/
     primary: true
+    install_command: cd apps/web && pnpm add {name}@{version}
 commands:
-  test: (cd services/leave-api && pnpm test) && (cd services/leave-worker && pnpm
-    run test) && (cd apps/web && pnpm test)
-  build: (cd services/leave-api && pnpm build) && (cd services/leave-worker && pnpm
-    run build) && (cd apps/web && pnpm build)
-  devloop: (cd services/leave-api && pnpm typecheck && pnpm test) && (cd services/leave-worker
-    && pnpm run devloop) && (cd apps/web && pnpm devloop)
-setup_command: (cd apps/web && pnpm install --frozen-lockfile) && (cd services/leave-api
-  && pnpm install --frozen-lockfile) && (cd services/leave-worker && pnpm install
-  --frozen-lockfile)
+  test: (cd services/leave-api && pnpm test) && (cd services/leave-worker && pnpm run test) && (cd apps/web && pnpm test)
+  build: (cd services/leave-api && pnpm build) && (cd services/leave-worker && pnpm run build) && (cd apps/web && pnpm build)
+  devloop: (cd services/leave-api && pnpm typecheck && pnpm test) && (cd services/leave-worker && pnpm run devloop) && (cd apps/web && pnpm devloop)
+setup_command: (cd apps/web && pnpm install --frozen-lockfile) && (cd services/leave-api && pnpm install --frozen-lockfile) && (cd services/leave-worker && pnpm install --frozen-lockfile)
 toolchain:
   node: '22'
   pnpm: 12.9.1
+package_install_commands:
+  pnpm: pnpm add {name}@{version}
