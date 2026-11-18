@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 0.1.0
+paths:
+  /organizations:
+    get:
+      summary: List organizations, ordered by name
+      responses:
+        '200':
+          description: All organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+components:
+  schemas:
+    Organization:
+      type: object
+      required: [id, name, address, admin, createdBy, contact]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        address: { type: string }
+        admin:
+          type: object
+          nullable: true
+          required: [name, email]
+          properties:
+            name: { type: string }
+            email: { type: string }
+        createdBy: { type: string }
+        contact:
+          type: object
+          required: [name, details]
+          properties:
+            name: { type: string }
+            details: { type: string }

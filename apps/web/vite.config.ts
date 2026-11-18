@@ -4,6 +4,14 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.LEAVE_API_URL ?? 'http://127.0.0.1:3000',
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,
