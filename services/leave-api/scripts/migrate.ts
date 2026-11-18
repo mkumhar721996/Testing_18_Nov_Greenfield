@@ -1,10 +1,12 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Pool } from 'pg';
 
 // Applies migrations/*.sql in filename order, once each, tracked in schema_migrations.
 async function migrate(): Promise<void> {
-  const dir = join(__dirname, '..', 'migrations');
+  // ESM (no "type" field, native strip-types): __dirname does not exist.
+  const dir = fileURLToPath(new URL('../migrations', import.meta.url));
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   try {
     await pool.query('create table if not exists schema_migrations (name text primary key)');
