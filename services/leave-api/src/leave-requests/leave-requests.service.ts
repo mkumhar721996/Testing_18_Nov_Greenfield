@@ -24,7 +24,11 @@ function plural(count: number): string {
   return `${count} ${count === 1 ? 'day' : 'days'}`;
 }
 
-function refuse(code: string, message: string, field: 'start' | 'end' | 'type'): never {
+const DAY_MS = 24 * 60 * 60 * 1000;
+const MAX_RANGE_DAYS = 366;
+const MAX_NOTE_LENGTH = 500;
+
+function refuse(code: string, message: string, field?: 'start' | 'end' | 'type'): never {
   throw new UnprocessableEntityException({ code, message, field });
 }
 
@@ -65,6 +69,14 @@ export class LeaveRequestsService {
         `The last day is before the first day. Pick a last day on or after ${written(startDate)}.`,
         'end',
       );
+    }
+
+    const spanDays = (Date.parse(endDate) - Date.parse(startDate)) / DAY_MS;
+    if (spanDays >= MAX_RANGE_DAYS) {
+      refuse('range_too_long', 'Leave can cover at most one year. Shorten your dates or send two requests.', 'end');
+    }
+    if (note && note.length > MAX_NOTE_LENGTH) {
+      refuse('note_too_long', `Keep your note under ${MAX_NOTE_LENGTH} characters.`);
     }
 
     const today = this.clock.today();

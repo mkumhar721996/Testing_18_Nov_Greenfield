@@ -182,6 +182,26 @@ describe('LeaveRequestsService', () => {
     ).toThrowError(refusal('no_working_days'));
   });
 
+  it('refuses a range longer than a year before counting days', () => {
+    expect(() =>
+      service.submit('emp-a', { leaveTypeId: 'annual', startDate: '2026-12-08', endDate: '9999-12-31' }),
+    ).toThrowError(refusal('range_too_long'));
+    expect(() =>
+      service.submit('emp-a', { leaveTypeId: 'annual', startDate: '2026-12-08', endDate: '2027-12-09' }),
+    ).toThrowError(refusal('range_too_long'));
+  });
+
+  it('refuses a note longer than 500 characters', () => {
+    expect(() =>
+      service.submit('emp-a', {
+        leaveTypeId: 'annual',
+        startDate: '2026-12-08',
+        endDate: '2026-12-08',
+        note: 'x'.repeat(501),
+      }),
+    ).toThrowError(refusal('note_too_long'));
+  });
+
   it('refuses an unknown leave type', () => {
     expect(() =>
       service.submit('emp-a', { leaveTypeId: 'sabbatical', startDate: '2026-12-08', endDate: '2026-12-08' }),
