@@ -1,7 +1,23 @@
+import { useState } from 'react'
+import { Dashboard } from './dashboard/Dashboard'
+
 export default function App() {
+  const [historyRequested, setHistoryRequested] = useState(false)
+
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50">
-      <h1 className="text-3xl font-bold text-slate-900">Web App</h1>
-    </main>
+    <>
+      <Dashboard
+        onViewAllTransactions={() => {
+          window.location.hash = '#/accounts/transactions'
+          setHistoryRequested(true)
+        }}
+      />
+      {historyRequested && (
+        <p role="status">
+          The full transaction history page is not available yet. It will open in Accounts &amp;
+          statements.
+        </p>
+      )}
+    </>
   )
 }
