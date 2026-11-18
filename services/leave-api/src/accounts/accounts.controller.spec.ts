@@ -1,4 +1,4 @@
-import { BadGatewayException, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { AccountsController } from './accounts.controller';
 import { AccountsService } from './accounts.service';
@@ -46,6 +46,11 @@ describe('AccountsController', () => {
 
   it('answers not found for an account that is not the caller’s', async () => {
     await expect(controller.get('cust-1', 'other-customers-id')).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  it.each([undefined, '', '   '])('fails closed with 401 when the caller identity is %j', async (id) => {
+    expect(() => controller.list(id as string)).toThrow(UnauthorizedException);
+    expect(() => controller.get(id as string, 'sav-1')).toThrow(UnauthorizedException);
   });
 
   it('answers bad gateway when the source fails for that account only', async () => {

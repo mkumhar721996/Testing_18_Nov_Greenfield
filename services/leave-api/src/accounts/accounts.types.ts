@@ -15,7 +15,11 @@ export interface AccountBalance extends LinkedAccount {
   creditLimitMinor?: number;
 }
 
-/** Where linked accounts and balances come from; swappable until the data origin is decided. */
+/**
+ * Where linked accounts and balances come from; swappable until the data origin is decided.
+ * `customerId` is currently taken from an unauthenticated dev-only header (see AccountsController):
+ * an implementation backed by real data must not be wired until it comes from a verified principal.
+ */
 export interface AccountsSource {
   list(customerId: string): Promise<LinkedAccount[]>;
   /** Resolves to null when the account is not one of the customer's linked accounts. */
