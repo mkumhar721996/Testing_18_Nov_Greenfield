@@ -4,6 +4,7 @@ components:
     name: Web App
     repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
     kind: web_ui
+    directory: apps/web
     integrations:
     - to: comp_leave_api
       interaction: sync
@@ -21,13 +22,24 @@ components:
         idp: comp_identity_provider
       status: planned
       evidence: 'human: Company SSO via Entra ID'
+    stack:
+      choices:
+        styling: tailwind
+        language: typescript
+        framework: react + vite
+        package_manager: pnpm
+        testing_tool_e2e: playwright
+        testing_tool_unit: vitest
+      notes: database not applicable — only calls the Leave API
   comp_leave_api:
     name: Leave API
     repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
     kind: api_service
+    directory: services/leave-api
     integrations:
     - to: comp_relational_database
       interaction: sync
+      via: postgresql
       status: planned
       evidence: 'proposed: API persists leave data'
     - to: comp_identity_provider
@@ -38,13 +50,24 @@ components:
         idp: comp_identity_provider
       status: planned
       evidence: 'human: Company SSO via Entra ID'
+    stack:
+      choices:
+        database: postgresql
+        language: typescript
+        framework: nestjs
+        package_manager: pnpm
+        testing_tool_e2e: playwright
+        testing_tool_unit: vitest
+      notes: styling not applicable — API only; e2e via Playwright API tests
   comp_leave_worker:
     name: Leave Worker
     repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
     kind: worker
+    directory: services/leave-worker
     integrations:
     - to: comp_relational_database
       interaction: sync
+      via: postgresql
       status: planned
       evidence: 'proposed: jobs read and update balances and requests'
     - to: external:email-service
@@ -55,10 +78,20 @@ components:
         credential_ref: vault:email-service/api-key
       status: planned
       evidence: 'human: "Email service only"'
+    stack:
+      choices:
+        language: typescript
+        package_manager: pnpm
+        testing_tool_unit: vitest
+      notes: no framework; owns no data (uses the shared PostgreSQL owned by the Leave
+        API); no e2e — no user-facing or externally called surface
   comp_relational_database:
     name: Relational Database
     repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
     kind: managed_service
+    stack:
+      choices:
+        managed_service: PostgreSQL on Amazon RDS (ap-south-1)
   comp_identity_provider:
     name: Identity Provider
     repo_ref: conn-github-c1fdfd24159b455380c481eeb0c3f9d5
@@ -76,3 +109,6 @@ components:
       sso: true
       user_store: directory
       notes: Flow, token and MFA settings proposed; confirm with the identity team.
+    stack:
+      choices:
+        managed_service: Microsoft Entra ID
