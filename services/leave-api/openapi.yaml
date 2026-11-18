@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 0.1.0
+paths:
+  /employees:
+    get:
+      summary: List employees (read-only; name and manager come from Entra ID)
+      parameters:
+        - name: status
+          in: query
+          schema: { type: string, enum: [active, inactive, all], default: active }
+      responses:
+        '200':
+          description: Employees the caller may see
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Employee' }
+        '400': { description: Invalid status }
+        '401': { description: Caller not identified }
+  /employees/{id}:
+    get:
+      summary: One employee with their leave approvals
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: The employee record
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmployeeRecord' }
+        '401': { description: Caller not identified }
+        '403': { description: Caller may not view this employee }
+        '404': { description: Unknown employee }
+components:
+  schemas:
+    Employee:
+      type: object
+      required: [id, displayName, email, jobTitle, department, status, manager, flags]
+      properties:
+        id: { type: string }
+        displayName: { type: string }
+        email: { type: string, nullable: true }
+        jobTitle: { type: string, nullable: true }
+        department: { type: string, nullable: true }
+        status: { type: string, enum: [active, inactive] }
+        manager:
+          type: object
+          nullable: true
+          required: [id, displayName]
+          properties:
+            id: { type: string }
+            displayName: { type: string }
+        flags:
+          type: object
+          required: [noManager]
+          properties:
+            noManager: { type: boolean }
+    EmployeeRecord:
+      allOf:
+        - $ref: '#/components/schemas/Employee'
+        - type: object
+          required: [approvals]
+          properties:
+            approvals:
+              type: array
+              items:
+                type: object
+                required: [id, status, routedManagerId, createdAt]
+                properties:
+                  id: { type: string }
+                  status: { type: string }
+                  routedManagerId: { type: string, nullable: true }
+                  createdAt: { type: string }
