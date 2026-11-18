@@ -40,6 +40,16 @@ export function PreApprovedOffers({
     return () => controller.abort()
   }, [load, attempt])
 
+  // Coming back via the browser's back button can restore this page from the bfcache with the
+  // button still disabled; clear it so the tile is usable again.
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setOpening(null)
+    }
+    window.addEventListener('pageshow', onPageShow)
+    return () => window.removeEventListener('pageshow', onPageShow)
+  }, [])
+
   const retry = useCallback(() => setAttempt((n) => n + 1), [])
 
   if (state.status === 'loading') {
@@ -88,7 +98,11 @@ export function PreApprovedOffers({
                 disabled={isOpening}
                 onClick={() => {
                   setOpening(offer.type)
-                  onStartJourney(offer.type, copy.journey)
+                  try {
+                    onStartJourney(offer.type, copy.journey)
+                  } catch {
+                    setOpening(null)
+                  }
                 }}
               >
                 {isOpening ? (

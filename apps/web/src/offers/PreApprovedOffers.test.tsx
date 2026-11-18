@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { PreApprovedOffers } from './PreApprovedOffers'
 
 const loan = async () => [{ type: 'personal-loan' as const }]
@@ -62,6 +62,25 @@ describe('PreApprovedOffers', () => {
     render(<PreApprovedOffers load={loan} onStartJourney={() => {}} />)
     fireEvent.click(await screen.findByRole('button', { name: 'Apply' }))
     expect(screen.getByRole('button', { name: 'Opening…' })).toBeDisabled()
+  })
+
+  it('re-enables the button if the hand-off throws', async () => {
+    const onStartJourney = vi.fn(() => {
+      throw new Error('navigation blocked')
+    })
+    render(<PreApprovedOffers load={loan} onStartJourney={onStartJourney} />)
+    fireEvent.click(await screen.findByRole('button', { name: 'Apply' }))
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeEnabled()
+  })
+
+  it('re-enables the button when the page is restored from the back/forward cache', async () => {
+    render(<PreApprovedOffers load={loan} onStartJourney={() => {}} />)
+    fireEvent.click(await screen.findByRole('button', { name: 'Apply' }))
+    expect(screen.getByRole('button', { name: 'Opening…' })).toBeDisabled()
+    act(() => {
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }))
+    })
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeEnabled()
   })
 
   it('shows a skeleton and no tile while loading', () => {
