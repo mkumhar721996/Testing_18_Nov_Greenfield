@@ -49,6 +49,8 @@ export interface ApprovalChange {
   id: string;
   status: 'pending' | 'blocked';
   routedManagerId: string | null;
+  /** Set when the manager is created in this same run and has no stored id yet. */
+  routedManagerEntraId?: string;
 }
 
 export interface SyncPlan {
@@ -114,20 +116,26 @@ export function planSync(
     if (e.active && !byEntraId.has(e.entraId)) plan.deactivate.push(e.id);
   }
 
-  // A manager known only from this run (not yet stored) has no id yet, so the approval
-  // stays blocked until the next run routes it.
-  const activeManagerId = (employeeId: string): string | null => {
+  // A manager created in this run has no id yet: the approval carries the Entra id and the
+  // store resolves it inside the same transaction.
+  const activeManager = (employeeId: string): { id: string | null; entraId: string } | null => {
     const employee = storedById.get(employeeId);
     const user = employee && byEntraId.get(employee.entraId);
     const managerEntraId = user && user.accountEnabled ? managerOf(user) : null;
     const manager = managerEntraId ? byEntraId.get(managerEntraId) : undefined;
-    return manager?.accountEnabled ? (stored.get(manager.id)?.id ?? null) : null;
+    return manager?.accountEnabled ? { id: stored.get(manager.id)?.id ?? null, entraId: manager.id } : null;
   };
   for (const a of approvals) {
-    const routedManagerId = activeManagerId(a.employeeId);
-    const status = routedManagerId ? 'pending' : 'blocked';
-    if (a.status !== status || a.routedManagerId !== routedManagerId) {
-      plan.approvals.push({ id: a.id, status, routedManagerId });
+    const manager = activeManager(a.employeeId);
+    const routedManagerId = manager?.id ?? null;
+    const status = manager ? 'pending' : 'blocked';
+    if (a.status !== status || a.routedManagerId !== routedManagerId || (manager && !manager.id)) {
+      plan.approvals.push({
+        id: a.id,
+        status,
+        routedManagerId,
+        ...(manager && !manager.id ? { routedManagerEntraId: manager.entraId } : {}),
+      });
     }
   }
   return plan;

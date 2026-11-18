@@ -21,7 +21,9 @@ refreshes them into the shared PostgreSQL database every night. The app has no w
   history stay on the record (foreign keys are `ON DELETE RESTRICT`).
 - An active employee with no manager gets a "No manager in Entra ID" flag. HR fixes it in Entra ID.
 - Pending leave approvals are `blocked` when the employee's manager is missing, disabled or removed, and are
-  routed to the new manager on the next run after HR assigns one.
+  routed to the new manager in the same run that sees one (including a manager created in that run).
+- Runs take a Postgres advisory lock, so a second worker instance skips instead of syncing concurrently.
+  `entra_sync_runs.error` holds the error class only, never the message.
 
 ## Settings
 

@@ -9,7 +9,13 @@ export default defineConfig({
   webServer: {
     command: 'pnpm build && node dist/main',
     url: `http://127.0.0.1:${port}/health`,
-    env: { PORT: String(port), HOST: '127.0.0.1', DATABASE_URL: process.env.DATABASE_URL ?? '' },
+    // The pool connects lazily and these specs are rejected before any query, so no database is needed;
+    // the placeholder only satisfies the API's fail-fast check.
+    env: {
+      PORT: String(port),
+      HOST: '127.0.0.1',
+      DATABASE_URL: process.env.DATABASE_URL ?? 'postgres://localhost:5432/e2e_unused',
+    },
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

@@ -104,6 +104,18 @@ describe('planSync', () => {
     expect(plan.approvals).toEqual([{ id: 'a1', status: 'pending', routedManagerId: 'm2-uuid' }]);
   });
 
+  it('AC9: a blocked approval is routed to a manager created in the same run', () => {
+    const plan = planSync(
+      [user({ id: 'm2' }), user({ managerId: 'm2' })],
+      [existing()],
+      [approval({ status: 'blocked' })],
+    );
+    expect(plan.create.map((c) => c.entraId)).toEqual(['m2']);
+    expect(plan.approvals).toEqual([
+      { id: 'a1', status: 'pending', routedManagerId: null, routedManagerEntraId: 'm2' },
+    ]);
+  });
+
   it('leaves an already correctly routed approval untouched', () => {
     const plan = planSync(
       [user({ id: 'm2' }), user({ managerId: 'm2' })],

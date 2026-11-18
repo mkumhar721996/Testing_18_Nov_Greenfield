@@ -20,7 +20,15 @@ class MemoryStore implements SyncStore {
   approvals = new Map<string, PendingApproval>();
   runs: { status: RunStatus; attempt: number; counts: RunCounts; error: string | null }[] = [];
   applied = 0;
+  locked = false;
+  released = 0;
 
+  async tryLock() {
+    if (this.locked) return null;
+    return async () => {
+      this.released++;
+    };
+  }
   async load() {
     return { employees: [...this.employees.values()], approvals: [...this.approvals.values()] };
   }
@@ -113,6 +121,31 @@ describe('runSyncWithRetry', () => {
     expect(store.employees.get('e1')).toBeDefined();
     expect(store.employees.get('e1')?.active).toBe(false);
     expect(store.approvals.get('a1')).toBeDefined();
+  });
+
+  it('persists only the error class, never the raw message', async () => {
+    const leak = new Error('duplicate key value (entra_object_id)=(11111111-2222) already exists');
+    leak.name = 'DatabaseError';
+    const { store, run } = setup(vi.fn().mockRejectedValue(leak));
+    await run();
+    const errors = store.runs.map((r) => r.error);
+    expect(errors).toEqual(Array(4).fill('DatabaseError'));
+  });
+
+  it('skips the run when another instance holds the lock', async () => {
+    const fetchUsers = vi.fn().mockResolvedValue([user()]);
+    const { store, run, log } = setup(fetchUsers);
+    store.locked = true;
+    expect(await run()).toBe('skipped');
+    expect(fetchUsers).not.toHaveBeenCalled();
+    expect(store.runs).toHaveLength(0);
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('already running'));
+  });
+
+  it('releases the lock after the run', async () => {
+    const { store, run } = setup(vi.fn().mockResolvedValue([user()]));
+    await run();
+    expect(store.released).toBe(1);
   });
 
   it('logs no display name or email', async () => {

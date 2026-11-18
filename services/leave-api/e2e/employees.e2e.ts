@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-// Needs DATABASE_URL (the API fails fast without it). No SSO exists yet, so the default
-// CallerProvider rejects every employee read with 401.
+// No database is needed (playwright.config.ts supplies a placeholder DATABASE_URL). No SSO exists
+// yet, so the default CallerProvider rejects every employee read with 401.
 const id = '00000000-0000-0000-0000-000000000001';
 
 test('AC7: there is no route to change a manager', async ({ request }) => {

@@ -9,8 +9,33 @@ const COLUMN: Record<Exclude<keyof EmployeeFields, 'managerEntraId'>, string> = 
   department: 'department',
 };
 
+const SYNC_LOCK_KEY = 1_801_160_016;
+
 export class PgSyncStore implements SyncStore {
   constructor(private readonly pool: Pool) {}
+
+  /** Session advisory lock on a dedicated connection, so two worker instances never sync at once. */
+  async tryLock(): Promise<(() => Promise<void>) | null> {
+    const client = await this.pool.connect();
+    try {
+      const res = await client.query('SELECT pg_try_advisory_lock($1) AS locked', [SYNC_LOCK_KEY]);
+      if (!res.rows[0].locked) {
+        client.release();
+        return null;
+      }
+    } catch (err) {
+      client.release();
+      throw err;
+    }
+    return async () => {
+      try {
+        await client.query('SELECT pg_advisory_unlock($1)', [SYNC_LOCK_KEY]);
+        client.release();
+      } catch (err) {
+        client.release(err as Error); // drop the connection, which also drops the session lock
+      }
+    };
+  }
 
   async load(): Promise<{ employees: ExistingEmployee[]; approvals: PendingApproval[] }> {
     const employees = await this.pool.query(
@@ -71,11 +96,13 @@ export class PgSyncStore implements SyncStore {
         );
       }
       for (const a of plan.approvals) {
-        await client.query('UPDATE leave_approvals SET status = $2, routed_manager_id = $3 WHERE id = $1', [
-          a.id,
-          a.status,
-          a.routedManagerId,
-        ]);
+        await client.query(
+          `UPDATE leave_approvals
+              SET status = $2,
+                  routed_manager_id = COALESCE($3::uuid, (SELECT id FROM employees WHERE entra_object_id = $4))
+            WHERE id = $1`,
+          [a.id, a.status, a.routedManagerId, a.routedManagerEntraId ?? null],
+        );
       }
       await client.query('COMMIT');
     } catch (err) {

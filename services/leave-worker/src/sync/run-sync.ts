@@ -11,6 +11,8 @@ export interface RunCounts {
 }
 
 export interface SyncStore {
+  /** Returns a release function, or null when another instance is already syncing. */
+  tryLock(): Promise<(() => Promise<void>) | null>;
   load(): Promise<{ employees: ExistingEmployee[]; approvals: PendingApproval[] }>;
   /** Applies the whole plan atomically: on failure nothing changes. */
   apply(plan: SyncPlan): Promise<void>;
@@ -28,8 +30,22 @@ export interface RunSyncDeps {
 
 const NO_COUNTS: RunCounts = { fetched: 0, created: 0, updated: 0, deactivated: 0, skipped: 0 };
 
+/** Takes the cross-instance lock, so a concurrent run is skipped rather than interleaved. */
+export async function runSyncWithRetry(deps: RunSyncDeps): Promise<RunStatus | 'skipped'> {
+  const release = await deps.store.tryLock();
+  if (!release) {
+    (deps.log ?? console.log)('entra sync skipped: already running on another instance');
+    return 'skipped';
+  }
+  try {
+    return await attemptSync(deps);
+  } finally {
+    await release();
+  }
+}
+
 /** Runs the sync up to backoffMs.length + 1 times; every attempt is recorded. Logs counts and error class only. */
-export async function runSyncWithRetry(deps: RunSyncDeps): Promise<RunStatus> {
+async function attemptSync(deps: RunSyncDeps): Promise<RunStatus> {
   const { store, sleep, backoffMs = [60_000, 300_000, 900_000], log = console.log } = deps;
   const attempts = backoffMs.length + 1;
   let status: RunStatus = 'failed';
@@ -56,8 +72,8 @@ export async function runSyncWithRetry(deps: RunSyncDeps): Promise<RunStatus> {
       status = 'failed';
       errorClass = err instanceof Error ? err.name : 'UnknownError';
       counts = NO_COUNTS;
-      const detail = err instanceof Error ? err.message : '';
-      await store.finishRun(runId, status, counts, `${errorClass}: ${detail}`);
+      // Class only: driver errors can carry row values (e.g. Entra object ids) in their message.
+      await store.finishRun(runId, status, counts, errorClass);
       log(`entra sync attempt ${attempt}/${attempts} failed (${errorClass})`);
       const retryable = !(err instanceof Error && (err as { retryable?: boolean }).retryable === false);
       if (!retryable || attempt === attempts) break;
