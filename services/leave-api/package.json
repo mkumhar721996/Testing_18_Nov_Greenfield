@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "comp_leave_api - leave management API",
-  "engines": {
-    "node": "22"
-  },
+  "engines": { "node": "22" },
   "packageManager": "pnpm@12.9.1",
   "scripts": {
     "build": "nest build",
