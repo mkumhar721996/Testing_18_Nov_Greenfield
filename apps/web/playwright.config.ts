@@ -6,7 +6,7 @@ export default defineConfig({
   testDir: './e2e',
   use: { baseURL: `http://localhost:${port}` },
   webServer: {
-    command: `pnpm build && pnpm preview --port ${port} --strictPort`,
+    command: `VITE_E2E=true pnpm build && pnpm preview --port ${port} --strictPort`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
