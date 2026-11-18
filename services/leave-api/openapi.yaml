@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 0.1.0
+paths:
+  /accounts:
+    get:
+      summary: List the caller's linked accounts
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: Linked accounts; an empty array when none are linked
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LinkedAccount'
+  /accounts/{id}:
+    get:
+      summary: One linked account with its balance
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The account and its balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountBalance'
+        '404':
+          description: Not one of the caller's accounts
+        '502':
+          description: The balance could not be loaded for this account
+components:
+  parameters:
+    CustomerId:
+      name: x-customer-id
+      in: header
+      required: true
+      description: Interim caller identity until Entra ID sign-in provides a principal
+      schema:
+        type: string
+  schemas:
+    LinkedAccount:
+      type: object
+      required: [id, type, displayName]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [savings, current, credit_card]
+        displayName:
+          type: string
+    AccountBalance:
+      allOf:
+        - $ref: '#/components/schemas/LinkedAccount'
+        - type: object
+          required: [currency, balanceMinor]
+          properties:
+            currency:
+              type: string
+              description: ISO 4217 code
+            balanceMinor:
+              type: integer
+              description: Minor units; for a credit card, the outstanding amount owed
+            creditLimitMinor:
+              type: integer
+              description: Credit card only, minor units

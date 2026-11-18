@@ -1,7 +1,13 @@
+import { AccountCards } from './accounts/AccountCards'
+
+// Integration point: the linking journey belongs to another epic, so there is nowhere to go yet.
+function linkAccount() {}
+
 export default function App() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50">
-      <h1 className="text-3xl font-bold text-slate-900">Web App</h1>
+    <main className="container">
+      <h1>Web App</h1>
+      <AccountCards onLinkAccount={linkAccount} />
     </main>
   )
 }

@@ -1,0 +1,68 @@
+.cards-3 {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--size-menu)), 1fr));
+}
+.sk-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.acct-card {
+  overflow-wrap: anywhere;
+}
+.muted {
+  color: var(--color-fg-muted);
+  font-size: var(--font-size-sm);
+}
+.amount {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: var(--space-1) 0;
+}
+.meter {
+  height: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-skeleton);
+  overflow: hidden;
+  margin-top: var(--space-2);
+}
+.meter > span {
+  display: block;
+  height: 100%;
+  background: var(--color-primary);
+}
+.acct-fail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  border-color: var(--color-danger);
+  background: var(--color-danger-subtle);
+  color: var(--color-danger-subtle-fg);
+}
+.acct-fail strong {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-md);
+}
+.acct-fail .muted {
+  color: var(--color-danger-subtle-fg);
+}
+.acct-fail .btn {
+  min-height: var(--size-control-lg);
+}
+.acct-fail .btn[disabled] {
+  cursor: progress;
+}
+.acct-icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
