@@ -6,6 +6,10 @@ import { OFFER_ELIGIBILITY_REPOSITORY, OfferEligibilityRepository } from './offe
 /**
  * Placeholder binding until the customer record store lands (another story): nobody is
  * marked eligible, so no offer is shown. Replace with the real repository implementation.
+ *
+ * KNOWN GAP: until that store exists, acceptance criteria 1 and 2 (tiles shown for eligible
+ * customers) are NOT delivered in a deployed system; they are only exercised against fakes in
+ * tests. Criteria 3 and 4 hold trivially.
  */
 const noEligibilityYet: OfferEligibilityRepository = {
   findEligibleOffers: async () => [],
