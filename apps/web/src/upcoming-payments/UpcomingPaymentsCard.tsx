@@ -43,7 +43,7 @@ export function UpcomingPaymentsCard({ onPayNow = openPaymentScreen }: Props) {
       <div aria-live="polite" aria-busy={state.status === 'loading'}>
       {state.status === 'loading' && (
         <div className="pay-list">
-          <span className="visually-hidden">Loading upcoming payments</span>
+          <span className="sr-only">Loading upcoming payments</span>
           <span className="skeleton pay-skeleton" />
           <span className="skeleton pay-skeleton" />
           <span className="skeleton pay-skeleton" />

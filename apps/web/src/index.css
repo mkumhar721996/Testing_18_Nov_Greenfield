@@ -15,4 +15,3 @@
 .pay-window { margin: 0 0 var(--space-2); }
 .pay-empty { padding: var(--space-4) var(--space-2); }
 .pay-skeleton { min-height: var(--size-control-lg); margin-top: var(--space-2); }
-.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
