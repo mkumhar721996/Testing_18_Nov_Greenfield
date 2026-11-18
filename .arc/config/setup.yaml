@@ -1,0 +1,48 @@
+components:
+  comp_leave_api:
+    mode: local
+    e2e_command: cd services/leave-api && pnpm e2e
+    test_command: cd services/leave-api && pnpm test
+    build_command: cd services/leave-api && pnpm build
+    start_command: cd services/leave-api && HOST={host} PORT={port} pnpm start
+    devloop_command: cd services/leave-api && pnpm typecheck && pnpm test
+    port_env: COMP_LEAVE_API_PORT
+    base_port: 8080
+    ready_check:
+      url: http://localhost:{port}/
+  comp_leave_worker:
+    mode: local
+    test_command: cd services/leave-worker && pnpm run test
+    build_command: cd services/leave-worker && pnpm run build
+    start_command: cd services/leave-worker && pnpm exec tsx src/index.ts --host {host}
+      --port {port}
+    devloop_command: cd services/leave-worker && pnpm run devloop
+    port_env: COMP_LEAVE_WORKER_PORT
+    base_port: 8081
+    ready_check:
+      url: http://localhost:{port}/
+  comp_web_app:
+    mode: local
+    e2e_command: cd apps/web && pnpm e2e
+    test_command: cd apps/web && pnpm test
+    build_command: cd apps/web && pnpm build
+    start_command: cd apps/web && pnpm exec vite --host {host} --port {port} --strictPort
+    devloop_command: cd apps/web && pnpm devloop
+    port_env: COMP_WEB_APP_PORT
+    base_port: 5173
+    ready_check:
+      url: http://localhost:{port}/
+    primary: true
+commands:
+  test: (cd services/leave-api && pnpm test) && (cd services/leave-worker && pnpm
+    run test) && (cd apps/web && pnpm test)
+  build: (cd services/leave-api && pnpm build) && (cd services/leave-worker && pnpm
+    run build) && (cd apps/web && pnpm build)
+  devloop: (cd services/leave-api && pnpm typecheck && pnpm test) && (cd services/leave-worker
+    && pnpm run devloop) && (cd apps/web && pnpm devloop)
+setup_command: (cd apps/web && pnpm install --frozen-lockfile) && (cd services/leave-api
+  && pnpm install --frozen-lockfile) && (cd services/leave-worker && pnpm install
+  --frozen-lockfile)
+toolchain:
+  node: '22'
+  pnpm: 12.9.1

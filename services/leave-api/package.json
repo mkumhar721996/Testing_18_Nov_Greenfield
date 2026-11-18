@@ -1,0 +1,30 @@
+{
+  "name": "leave-api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "comp_leave_api - leave management API",
+  "engines": { "node": "22" },
+  "packageManager": "pnpm@12.9.1",
+  "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:prod": "node dist/main",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
