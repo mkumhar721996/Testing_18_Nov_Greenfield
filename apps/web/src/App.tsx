@@ -1,7 +1,19 @@
+import { useState } from 'react'
+import { AppShell, type SectionId } from './components/AppShell'
+import { MyLeavePage } from './pages/MyLeavePage'
+
 export default function App() {
+  const [section, setSection] = useState<SectionId>('my-leave')
+
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50">
-      <h1 className="text-3xl font-bold text-slate-900">Web App</h1>
-    </main>
+    <AppShell current={section} onNavigate={setSection}>
+      {section === 'my-leave' ? (
+        <MyLeavePage />
+      ) : (
+        <div className="lr-page">
+          <p>This section is not part of this release.</p>
+        </div>
+      )}
+    </AppShell>
   )
 }

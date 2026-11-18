@@ -4,6 +4,17 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    // the design tokens live in ../../design-system, outside this package
+    fs: { allow: ['../..'] },
+    proxy: {
+      '/api': {
+        target: process.env.LEAVE_API_URL ?? 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,
