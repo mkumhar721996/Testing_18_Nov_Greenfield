@@ -14,6 +14,7 @@ export default defineConfig({
       HOST: '127.0.0.1',
       LEAVE_BALANCES_DEV_SEED: 'true',
       LEAVE_API_TEST_PRINCIPAL: 'true',
+      NODE_ENV: 'test',
     },
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

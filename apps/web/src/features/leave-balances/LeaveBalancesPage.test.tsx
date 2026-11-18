@@ -36,7 +36,10 @@ describe('LeaveBalancesPage', () => {
     expect(screen.getByText('-0.5')).toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(2)
     expect(screen.getByText('Updated Wed 18 Nov 2026')).toBeInTheDocument()
-    expect(fetchMock).toHaveBeenCalledWith('/leave-balances/me', expect.anything())
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/leave-balances/me',
+      expect.objectContaining({ credentials: 'include' }),
+    )
   })
 
   it('shows the empty state', async () => {

@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { shouldInstallTestPrincipal } from './auth/test-principal.config';
 import { testPrincipalMiddleware } from './auth/test-principal.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  if (process.env.LEAVE_API_TEST_PRINCIPAL === 'true' && process.env.NODE_ENV !== 'production') {
+  if (shouldInstallTestPrincipal(process.env)) {
     app.use(testPrincipalMiddleware);
   }
   const port =Number(process.env.PORT ?? 3000);
