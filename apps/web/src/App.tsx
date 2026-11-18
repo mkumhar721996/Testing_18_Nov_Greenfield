@@ -1,10 +1,19 @@
+import { Dashboard } from './dashboard/Dashboard'
+import type { Destination } from './dashboard/navigation'
 import { PreApprovedOffers } from './offers/PreApprovedOffers'
+import { CustomerContext, useCustomer } from './session/customer'
+
+function navigateTo(destination: Destination) {
+  window.location.hash = `#/${destination}`
+}
 
 export default function App() {
+  const customer = useCustomer()
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-      <h1 className="text-3xl font-bold text-slate-900">Web App</h1>
-      <PreApprovedOffers />
-    </main>
+    <CustomerContext.Provider value={customer}>
+      <Dashboard onNavigate={navigateTo}>
+        <PreApprovedOffers />
+      </Dashboard>
+    </CustomerContext.Provider>
   )
 }
