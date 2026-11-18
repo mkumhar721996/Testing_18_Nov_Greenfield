@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useCustomer } from '../session/customer'
 import './dashboard.css'
 import { greetingFor } from './greeting'
@@ -10,9 +11,10 @@ type Props = {
   now?: Date
   onNavigate: (d: Destination) => void
   onSignOut?: () => void
+  children?: ReactNode
 }
 
-export function Dashboard({ now = new Date(), onNavigate, onSignOut }: Props) {
+export function Dashboard({ now = new Date(), onNavigate, onSignOut, children }: Props) {
   const customer = useCustomer()
   if (!customer) return null
 
@@ -26,6 +28,7 @@ export function Dashboard({ now = new Date(), onNavigate, onSignOut }: Props) {
             <h1 aria-live="polite">{greetingFor(customer.firstName, now)}</h1>
             <QuickActions onNavigate={onNavigate} />
           </div>
+          {children}
         </main>
       </div>
     </>

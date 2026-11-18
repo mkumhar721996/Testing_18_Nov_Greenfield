@@ -1,5 +1,6 @@
 import { Dashboard } from './dashboard/Dashboard'
 import type { Destination } from './dashboard/navigation'
+import { PreApprovedOffers } from './offers/PreApprovedOffers'
 import { CustomerContext, useCustomer } from './session/customer'
 
 function navigateTo(destination: Destination) {
@@ -10,7 +11,9 @@ export default function App() {
   const customer = useCustomer()
   return (
     <CustomerContext.Provider value={customer}>
-      <Dashboard onNavigate={navigateTo} />
+      <Dashboard onNavigate={navigateTo}>
+        <PreApprovedOffers />
+      </Dashboard>
     </CustomerContext.Provider>
   )
 }

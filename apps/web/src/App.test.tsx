@@ -4,12 +4,14 @@ import { CustomerContext } from './session/customer'
 
 describe('App', () => {
   it('greets the signed-in customer by first name', () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ offers: [] }))))
     render(
       <CustomerContext.Provider value={{ firstName: 'Asha', fullName: 'Asha Menon' }}>
         <App />
       </CustomerContext.Provider>,
     )
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/^Good .+, Asha$/)
+    vi.unstubAllGlobals()
   })
 
   it('renders no dashboard without a signed-in customer', () => {

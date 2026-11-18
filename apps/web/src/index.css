@@ -1,3 +1,40 @@
 @import 'tailwindcss';
 @import '../../../design-system/tokens.css';
 @import '../../../design-system/prototype-utils.css';
+
+.offers {
+  width: 100%;
+  max-width: var(--size-content);
+  padding: var(--space-3);
+}
+.offers h2 {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-2);
+}
+.offer-tiles {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--size-menu)), 1fr));
+}
+.offer-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  overflow-wrap: anywhere;
+}
+.offer-tile .amount {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+.offer-tile .muted {
+  font-size: var(--font-size-sm);
+  color: var(--color-fg-muted);
+}
+.offer-tile .btn {
+  min-height: var(--size-control-lg);
+  margin-top: auto;
+}
+.offer-skeleton {
+  min-height: var(--size-control-lg);
+}
