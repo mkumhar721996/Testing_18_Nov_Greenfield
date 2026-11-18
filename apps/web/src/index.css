@@ -1,1 +1,17 @@
 @import 'tailwindcss';
+@import '../../../design-system/tokens.css';
+@import '../../../design-system/prototype-utils.css';
+
+/* Upcoming payments card */
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-2); }
+.pay-list { display: flex; flex-direction: column; }
+.pay-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-3); padding: var(--space-3) 0; border-top: var(--border-width) solid var(--color-border); overflow-wrap: anywhere; }
+.pay-row:first-child { border-top: 0; padding-top: var(--space-1); }
+.pay-info { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); min-width: 0; flex: 1 1 var(--size-menu); }
+.pay-name { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+.pay-side { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
+.pay-amount { font-size: var(--font-size-md); font-weight: var(--font-weight-bold); white-space: nowrap; }
+.pay-side .btn { min-height: var(--size-control-lg); }
+.pay-window { margin: 0 0 var(--space-2); }
+.pay-empty { padding: var(--space-4) var(--space-2); }
+.pay-skeleton { min-height: var(--size-control-lg); margin-top: var(--space-2); }

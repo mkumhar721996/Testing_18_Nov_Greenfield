@@ -1,0 +1,33 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 0.1.0
+paths:
+  /dashboard/upcoming-payments:
+    get:
+      summary: Payments due for the signed-in customer from today through the look-ahead window (inclusive)
+      description: The window is a server-side setting (default 30 days); no parameter changes it. Overdue items are excluded.
+      responses:
+        '200':
+          description: Upcoming payments sorted by due date
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [windowDays, payments]
+                properties:
+                  windowDays:
+                    type: integer
+                    minimum: 1
+                  payments:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, type, name, dueDate, amount, daysUntilDue]
+                      properties:
+                        id: { type: string }
+                        type: { type: string, enum: [card_due, loan_instalment, scheduled_bill] }
+                        name: { type: string }
+                        dueDate: { type: string, format: date }
+                        amount: { type: integer, description: Whole INR }
+                        daysUntilDue: { type: integer, minimum: 0 }
