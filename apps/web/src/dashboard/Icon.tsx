@@ -16,6 +16,7 @@ const PATHS: Record<string, string[]> = {
     'M3 10h18',
   ],
   'chevron-down': ['m6 9 6 6 6-6'],
+  alert: ['M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0', 'M12 8v4', 'M12 16h.01'],
 }
 
 export function Icon({ name }: { name: string }) {
