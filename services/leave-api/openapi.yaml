@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 0.1.0
+paths:
+  /spins:
+    post:
+      summary: Play one spin with a chosen bet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [bet]
+              properties:
+                bet:
+                  type: integer
+                  enum: [1, 5, 10, 25, 50]
+      responses:
+        '201':
+          description: The outcome of the spin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpinOutcome'
+        '400':
+          description: The bet is not one of the offered sizes
+components:
+  schemas:
+    SpinOutcome:
+      type: object
+      required: [bet, reels, outcome, amountWon, winningCells]
+      properties:
+        bet:
+          type: integer
+          enum: [1, 5, 10, 25, 50]
+        reels:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            type: array
+            minItems: 3
+            maxItems: 3
+            items:
+              type: string
+              enum: [Cherry, Bell, Bar, Seven]
+        outcome:
+          type: string
+          enum: [win, loss]
+        amountWon:
+          type: integer
+          minimum: 0
+        winningCells:
+          type: array
+          items:
+            type: array
+            minItems: 2
+            maxItems: 2
+            items:
+              type: integer

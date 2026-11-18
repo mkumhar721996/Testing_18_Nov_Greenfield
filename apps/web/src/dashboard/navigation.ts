@@ -7,6 +7,7 @@ export type Destination =
   | 'payments'
   | 'cards'
   | 'profile'
+  | 'slot'
 
 export type IconName = 'home' | 'user' | 'arrow-right' | 'bell' | 'calendar'
 
