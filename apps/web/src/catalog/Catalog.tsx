@@ -35,6 +35,7 @@ export function Catalog() {
           <a href="#/catalog" aria-current="page">
             Browse services
           </a>
+          <a href="#/providers">Find providers</a>
         </nav>
       </header>
       <main className="catalog-page">

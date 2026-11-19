@@ -22,6 +22,15 @@ describe('App', () => {
     vi.unstubAllGlobals()
   })
 
+  it('shows the public providers page at #/providers without a customer', () => {
+    vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
+    window.location.hash = '#/providers'
+    render(<App />)
+    expect(screen.getByRole('heading', { level: 1, name: 'Providers' })).toBeInTheDocument()
+    window.location.hash = ''
+    vi.unstubAllGlobals()
+  })
+
   it('renders no dashboard without a signed-in customer', () => {
     render(<App />)
     expect(screen.queryByRole('heading')).not.toBeInTheDocument()
