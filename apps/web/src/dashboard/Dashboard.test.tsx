@@ -31,7 +31,7 @@ describe('Dashboard frame', () => {
       within(nav)
         .getAllByRole('button', { hidden: true })
         .map((b) => b.textContent),
-    ).toEqual(['Dashboard', 'Accounts', 'Payments', 'Cards'])
+    ).toEqual(['Dashboard', 'My leave', 'Accounts', 'Payments', 'Cards'])
     const menu = screen.getByRole('button', { name: 'Menu' })
     expect(menu).toHaveAttribute('aria-expanded', 'false')
     fireEvent.click(menu)
