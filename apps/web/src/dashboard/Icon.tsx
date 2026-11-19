@@ -15,6 +15,7 @@ const PATHS: Record<string, string[]> = {
     'M8 2v4',
     'M3 10h18',
   ],
+  alert: ['M2 12a10 10 0 1 0 20 0 10 10 0 1 0-20 0', 'M12 8v4', 'M12 16h.01'],
   'chevron-down': ['m6 9 6 6 6-6'],
 }
 
