@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: Leave API
+  version: 0.1.0
+paths:
+  /leave-balances/me:
+    get:
+      summary: Leave balances of the signed-in employee, one per configured leave type
+      description: >-
+        The employee is taken from the authenticated principal, never from the request.
+        balanceDays is in whole days and already has approved and pending days taken off.
+      responses:
+        '200':
+          description: The caller's balances; an empty list means no leave types are configured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveBalancesResponse'
+        '401':
+          description: No authenticated principal
+components:
+  schemas:
+    LeaveBalancesResponse:
+      type: object
+      required: [asOf, balances]
+      properties:
+        asOf:
+          type: string
+          format: date-time
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeaveBalance'
+    LeaveBalance:
+      type: object
+      required: [leaveTypeId, leaveTypeName, balanceDays, pendingDays, pendingFrom, pendingTo]
+      properties:
+        leaveTypeId:
+          type: string
+        leaveTypeName:
+          type: string
+        balanceDays:
+          type: integer
+          nullable: true
+          description: Whole days; null when HR has not entered an opening balance
+        pendingDays:
+          type: number
+        pendingFrom:
+          type: string
+          format: date
+          nullable: true
+        pendingTo:
+          type: string
+          format: date
+          nullable: true

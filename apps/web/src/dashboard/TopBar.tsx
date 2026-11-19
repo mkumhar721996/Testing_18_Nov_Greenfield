@@ -6,11 +6,12 @@ import { UserMenu } from './UserMenu'
 
 type Props = {
   customer: Customer
+  current?: Destination
   onNavigate: (d: Destination) => void
   onSignOut?: () => void
 }
 
-export function TopBar({ customer, onNavigate, onSignOut }: Props) {
+export function TopBar({ customer, current = 'dashboard', onNavigate, onSignOut }: Props) {
   const [navOpen, setNavOpen] = useState(false)
 
   return (
@@ -38,7 +39,7 @@ export function TopBar({ customer, onNavigate, onSignOut }: Props) {
               <button
                 type="button"
                 className="navlink"
-                aria-current={item.destination === 'dashboard' ? 'page' : undefined}
+                aria-current={item.destination === current ? 'page' : undefined}
                 onClick={() => onNavigate(item.destination)}
               >
                 {item.label}

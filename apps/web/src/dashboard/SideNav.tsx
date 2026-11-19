@@ -1,7 +1,13 @@
 import { Icon } from './Icon'
 import { type Destination, SIDEBAR_ITEMS } from './navigation'
 
-export function SideNav({ onNavigate }: { onNavigate: (d: Destination) => void }) {
+export function SideNav({
+  current = 'dashboard',
+  onNavigate,
+}: {
+  current?: Destination
+  onNavigate: (d: Destination) => void
+}) {
   return (
     <nav className="sidenav" aria-label="Banking areas">
       <ul>
@@ -10,7 +16,7 @@ export function SideNav({ onNavigate }: { onNavigate: (d: Destination) => void }
             <button
               type="button"
               className="navlink"
-              aria-current={item.destination === 'dashboard' ? 'page' : undefined}
+              aria-current={item.destination === current ? 'page' : undefined}
               onClick={() => onNavigate(item.destination)}
             >
               <Icon name={item.icon} />
