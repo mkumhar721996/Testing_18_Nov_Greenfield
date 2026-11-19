@@ -43,7 +43,8 @@ describe('LeaveBalancesService', () => {
     source.seed('emp-a', [row('Annual leave', { openingDays: 10 })]);
     source.seed('emp-b', [row('Annual leave', { openingDays: 99 })]);
     const res = await service.getForEmployee('emp-a');
-    expect(JSON.stringify(res)).not.toContain('99');
+    expect(res.balances).toHaveLength(1);
+    expect(res.balances[0].balanceDays).toBe(10);
   });
 
   it('deducts pending days from the balance and returns them separately (AC5, AC6)', async () => {

@@ -3,6 +3,11 @@ import App from './App'
 import { CustomerContext } from './session/customer'
 
 describe('App', () => {
+  afterEach(() => {
+    window.location.hash = ''
+    vi.unstubAllGlobals()
+  })
+
   it('greets the signed-in customer by first name', () => {
     render(
       <CustomerContext.Provider value={{ firstName: 'Asha', fullName: 'Asha Menon' }}>
@@ -28,8 +33,6 @@ describe('App', () => {
       .getAllByRole('button', { name: 'My leave', hidden: true })
       .filter((b) => b.getAttribute('aria-current') === 'page')
     expect(current.length).toBeGreaterThan(0)
-    window.location.hash = ''
-    vi.unstubAllGlobals()
   })
 
   it('renders no dashboard without a signed-in customer', () => {

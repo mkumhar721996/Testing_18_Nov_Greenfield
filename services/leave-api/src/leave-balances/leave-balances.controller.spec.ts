@@ -17,6 +17,11 @@ describe('LeaveBalancesController', () => {
     expect(service.getForEmployee).toHaveBeenCalledWith('emp-a');
     expect(service.getForEmployee).not.toHaveBeenCalledWith('emp-b');
   });
+
+  it('protects the route with AuthenticatedGuard', () => {
+    const guards = Reflect.getMetadata('__guards__', LeaveBalancesController.prototype.getMine);
+    expect(guards).toContain(AuthenticatedGuard);
+  });
 });
 
 describe('AuthenticatedGuard', () => {
