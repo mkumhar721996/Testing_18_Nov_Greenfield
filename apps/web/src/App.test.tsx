@@ -22,11 +22,13 @@ describe('App', () => {
     vi.unstubAllGlobals()
   })
 
-  it('shows the public providers page at #/providers without a customer', () => {
+  it('shows the public provider search at #/providers without a customer or sign-in prompt', async () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
     window.location.hash = '#/providers'
     render(<App />)
-    expect(screen.getByRole('heading', { level: 1, name: 'Providers' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Find a provider' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Search providers' })).toBeInTheDocument()
+    expect(screen.queryByText(/sign in\b/i, { selector: 'button, a' })).toBeNull()
     window.location.hash = ''
     vi.unstubAllGlobals()
   })

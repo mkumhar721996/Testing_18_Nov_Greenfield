@@ -1,0 +1,26 @@
+openapi: 3.0.3
+info:
+  title: Leave API - shared town list
+  version: 1.0.0
+paths:
+  /towns:
+    get:
+      summary: List the towns customers can search in (public, read-only)
+      security: []
+      responses:
+        '200':
+          description: The shared towns; an empty list when there are none
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [towns]
+                properties:
+                  towns:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name]
+                      properties:
+                        id: { type: string }
+                        name: { type: string }

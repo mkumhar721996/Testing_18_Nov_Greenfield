@@ -24,8 +24,8 @@ describe('ProvidersService', () => {
     expect(asha).toEqual({
       id: 'asha-plumbing',
       name: 'Asha Plumbing Co.',
-      services: ['Plumbing', 'Water heater repair'],
-      towns: ['Pune', 'Pimpri-Chinchwad'],
+      services: ['Plumbing', 'Appliance repair'],
+      towns: ['Pune', 'Mumbai'],
       averageRating: 4.9,
       reviewCount: 124,
     });
@@ -79,5 +79,51 @@ describe('ProvidersService', () => {
 
   it('returns an empty list for empty data', () => {
     expect(new ProvidersService([]).list()).toEqual({ providers: [] });
+  });
+
+  describe('search by service and town', () => {
+    const p = (id: string, services: string[], towns: string[]): Provider => ({
+      id,
+      name: id,
+      services,
+      towns,
+      rating: null,
+    });
+    const search = (data: Provider[], service: string, town: string) =>
+      new ProvidersService(data).list({ service, town }).providers.map((x) => x.name);
+
+    it('shows providers matching the service and town, best rated first (AC1)', () => {
+      expect(search(PROVIDERS, 'Plumbing', 'Pune')).toEqual([
+        'Asha Plumbing Co.',
+        'Bright Spark Electrical',
+        'Cedar Home Services',
+      ]);
+    });
+
+    it('finds a multi-service, multi-town provider for every pair it lists (AC2)', () => {
+      const multi = p('Multi', ['Plumbing', 'Cleaning'], ['Pune', 'Mumbai']);
+      for (const service of multi.services)
+        for (const town of multi.towns) expect(search([multi], service, town)).toEqual(['Multi']);
+    });
+
+    it('excludes a provider that lists the town but not the service (AC4)', () => {
+      expect(search([p('A', ['Electrical'], ['Pune'])], 'Plumbing', 'Pune')).toEqual([]);
+    });
+
+    it('excludes a provider that lists the service but not the town (AC5)', () => {
+      expect(search([p('A', ['Plumbing'], ['Mumbai'])], 'Plumbing', 'Pune')).toEqual([]);
+    });
+
+    it('does not mix a service from one town with another town of the provider', () => {
+      expect(search(PROVIDERS, 'Plumbing', 'Kolkata')).toEqual([]);
+    });
+
+    it('ignores case and surrounding spaces', () => {
+      expect(search([p('A', ['Plumbing'], ['Pune'])], ' plumbing ', 'PUNE')).toEqual(['A']);
+    });
+
+    it('returns everything when no filter is given', () => {
+      expect(new ProvidersService(PROVIDERS).list().providers).toHaveLength(5);
+    });
   });
 });

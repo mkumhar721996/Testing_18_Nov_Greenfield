@@ -10,6 +10,17 @@ paths:
         Ordered by average rating (highest first); equal ratings A-Z by name;
         providers with no ratings yet come after every rated provider, A-Z.
       security: []
+      parameters:
+        - name: service
+          in: query
+          required: false
+          description: Service category name. A provider matches when it lists this service AND the chosen town.
+          schema: { type: string }
+        - name: town
+          in: query
+          required: false
+          description: Town name from GET /towns. An unknown service or town returns an empty list, not an error.
+          schema: { type: string }
       responses:
         '200':
           description: The provider listings; an empty list when there are none
