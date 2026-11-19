@@ -1,0 +1,17 @@
+.lb-head { margin-bottom: var(--space-4); }
+.lb-head h1 { margin: 0 0 var(--space-1); font-size: var(--font-size-xl); line-height: var(--line-height-tight); }
+.lb-head p { margin: 0; color: var(--color-fg-muted); }
+.lb-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.lb-type { margin: 0; font-size: var(--font-size-md); font-weight: var(--font-weight-medium); }
+.lb-days { margin: var(--space-2) 0 0; font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); }
+.lb-days small { font-size: var(--font-size-md); font-weight: var(--font-weight-regular); color: var(--color-fg-muted); }
+.lb-label { margin: 0; font-size: var(--font-size-sm); color: var(--color-fg-muted); }
+.lb-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); font-size: var(--font-size-sm); }
+.lb-detail { margin: var(--space-2) 0 0; font-size: var(--font-size-sm); color: var(--color-fg-muted); }
+.lb-note { margin: var(--space-3) 0 0; font-size: var(--font-size-sm); color: var(--color-fg-muted); }
+.lb-retry { margin: var(--space-3) 0 0; }
+.lb-pending { background: var(--color-primary-subtle); color: var(--color-primary-subtle-fg); }
+.lb-skel-card { min-height: calc(var(--size-menu) - var(--space-3)); }
+.lb-skel { height: var(--space-4); margin-bottom: var(--space-2); border-radius: var(--radius-sm); }
+.lb-skel.is-short { width: 50%; }
+.lb-skel.is-tall { height: var(--space-5); width: 40%; }

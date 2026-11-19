@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useCustomer } from '../session/customer'
 import './dashboard.css'
 import { greetingFor } from './greeting'
@@ -8,24 +9,29 @@ import { TopBar } from './TopBar'
 
 type Props = {
   now?: Date
+  current?: Destination
+  /** Replaces the dashboard's own content inside the shell. */
+  children?: ReactNode
   onNavigate: (d: Destination) => void
   onSignOut?: () => void
 }
 
-export function Dashboard({ now = new Date(), onNavigate, onSignOut }: Props) {
+export function Dashboard({ now = new Date(), current = 'dashboard', children, onNavigate, onSignOut }: Props) {
   const customer = useCustomer()
   if (!customer) return null
 
   return (
     <>
-      <TopBar customer={customer} onNavigate={onNavigate} onSignOut={onSignOut} />
+      <TopBar customer={customer} current={current} onNavigate={onNavigate} onSignOut={onSignOut} />
       <div className="layout">
-        <SideNav onNavigate={onNavigate} />
+        <SideNav current={current} onNavigate={onNavigate} />
         <main className="main" id="content">
-          <div className="page-header">
-            <h1 aria-live="polite">{greetingFor(customer.firstName, now)}</h1>
-            <QuickActions onNavigate={onNavigate} />
-          </div>
+          {children ?? (
+            <div className="page-header">
+              <h1 aria-live="polite">{greetingFor(customer.firstName, now)}</h1>
+              <QuickActions onNavigate={onNavigate} />
+            </div>
+          )}
         </main>
       </div>
     </>
