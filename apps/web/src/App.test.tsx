@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { vi } from 'vitest'
 import App from './App'
 import { CustomerContext } from './session/customer'
 
@@ -10,6 +11,15 @@ describe('App', () => {
       </CustomerContext.Provider>,
     )
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/^Good .+, Asha$/)
+  })
+
+  it('shows the public catalog at #/catalog without a customer', () => {
+    vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
+    window.location.hash = '#/catalog'
+    render(<App />)
+    expect(screen.getByRole('heading', { level: 1, name: 'Service categories' })).toBeInTheDocument()
+    window.location.hash = ''
+    vi.unstubAllGlobals()
   })
 
   it('renders no dashboard without a signed-in customer', () => {

@@ -1,0 +1,27 @@
+openapi: 3.0.3
+info:
+  title: Leave API - service catalog
+  version: 1.0.0
+paths:
+  /service-categories:
+    get:
+      summary: List the service categories (public, read-only, no prices)
+      security: []
+      responses:
+        '200':
+          description: The catalog categories; an empty list when the catalog holds none
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [categories]
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name, description]
+                      properties:
+                        id: { type: string }
+                        name: { type: string }
+                        description: { type: string }
