@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: Leave API - provider listings
+  version: 1.0.0
+paths:
+  /providers:
+    get:
+      summary: List providers, best rated first (public, read-only, no prices or availability)
+      description: >
+        Ordered by average rating (highest first); equal ratings A-Z by name;
+        providers with no ratings yet come after every rated provider, A-Z.
+      security: []
+      responses:
+        '200':
+          description: The provider listings; an empty list when there are none
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [providers]
+                properties:
+                  providers:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name, services, towns, averageRating, reviewCount]
+                      properties:
+                        id: { type: string }
+                        name: { type: string }
+                        services:
+                          type: array
+                          items: { type: string }
+                        towns:
+                          type: array
+                          items: { type: string }
+                        averageRating:
+                          type: number
+                          nullable: true
+                          description: Null when the provider has no ratings yet
+                        reviewCount: { type: integer }
