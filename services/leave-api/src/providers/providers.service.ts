@@ -10,6 +10,13 @@ export interface ProviderListing {
   reviewCount: number;
 }
 
+export interface ProviderFilter {
+  service?: string;
+  town?: string;
+}
+
+const normalise = (value?: string) => value?.trim().toLowerCase();
+
 const isRated = (p: Provider) => p.rating !== null && p.rating.count > 0;
 
 // Best rated first; equal ratings (and all unrated providers) A-Z; unrated providers after every rated one.
@@ -25,10 +32,16 @@ export function compareProviders(a: Provider, b: Provider): number {
 export class ProvidersService {
   constructor(@Inject(PROVIDERS_DATA) private readonly providers: Provider[]) {}
 
-  list(): { providers: ProviderListing[] } {
+  list(filter: ProviderFilter = {}): { providers: ProviderListing[] } {
+    const service = normalise(filter.service);
+    const town = normalise(filter.town);
+    const matches = (p: Provider) =>
+      (!service || p.services.some((s) => normalise(s) === service)) &&
+      (!town || p.towns.some((t) => normalise(t) === town));
+
     // Explicit mapping: a stray field in the data (e.g. a price or availability) never reaches the response.
     return {
-      providers: [...this.providers].sort(compareProviders).map((p) => ({
+      providers: this.providers.filter(matches).sort(compareProviders).map((p) => ({
         id: p.id,
         name: p.name,
         services: [...p.services],

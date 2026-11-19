@@ -15,6 +15,19 @@ describe('ProvidersController', () => {
     ]);
   });
 
+  it('answers a filtered search without credentials (AC3)', () => {
+    expect(Reflect.getMetadata('__guards__', ProvidersController)).toBeUndefined();
+    expect(Reflect.getMetadata('__guards__', ProvidersController.prototype.list)).toBeUndefined();
+    const controller = new ProvidersController(new ProvidersService(PROVIDERS));
+    expect(controller.list('Plumbing', 'Pune').providers.length).toBeGreaterThan(0);
+    expect(controller.list('Plumbing', 'Kolkata')).toEqual({ providers: [] });
+  });
+
+  it('ignores a repeated query parameter beyond the first', () => {
+    const controller = new ProvidersController(new ProvidersService(PROVIDERS));
+    expect(controller.list(['Plumbing', 'Cleaning'], 'Pune').providers.length).toBe(3);
+  });
+
   it('returns an empty list for empty data', () => {
     expect(new ProvidersController(new ProvidersService([])).list()).toEqual({ providers: [] });
   });
